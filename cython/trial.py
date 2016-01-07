@@ -19,6 +19,7 @@ def trial(task,duration, trial_n=0, debugging=True,
         if i == 100:
             init_pos = task.trials[trial_n]["initial_pos_arm"]
             PPC.str.Iext.reshape((n_arm,n_targets))[init_pos,:] = 7
+            M1_in.str.Iext.reshape((n_arm, n_sma))[init_pos,:] = 7
 
     set_trial(task, trial=trial_n)
 

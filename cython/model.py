@@ -18,6 +18,10 @@ sigmoid = Sigmoid(Vmin=Vmin, Vmax=Vmax, Vh=Vh, Vc=Vc)
 TARGET = Structure(tau=tau, rest=TARGET_rest, noise=Cortex_N, activation=clamp, n=n_targets)
 PPC = Structure(tau=tau, rest=PPC_rest, noise=Cortex_N, activation=clamp, n=n_ppc)
 SMA = Structure(tau=tau, rest=SMA_rest, noise=Cortex_N, activation=clamp, n=n_sma)
+M1_in = Structure(tau=tau, rest=M1_in_rest, noise=Cortex_N, activation=clamp, n=n_m1_in)
+M1_out = Structure(tau=tau, rest=M1_out_rest, noise=Cortex_N, activation=clamp, n=n_m1_out)
+ISM = Structure(tau=tau, rest=-a, noise=Cortex_N, activation=clamp, n=n_ism)
+
 # BG
 STR = Structure(tau=tau, rest=STR_rest, noise=Striatum_N, activation=clamp, n=n_sma * n_ppc)
 STN = Structure(tau=tau, rest=STN_rest, noise=STN_N, activation=clamp, n=n_sma * n_ppc)
@@ -26,7 +30,7 @@ GPI = Structure(tau=tau, rest=GPI_rest, noise=GPi_N, activation=clamp, n=n_sma)
 THL = Structure(tau=tau, rest=THL_rest, noise=Thalamus_N, activation=clamp, n=n_sma)
 
 
-structures = (PPC, SMA, TARGET, STR, STN, GPE, GPI, THL)  #
+structures = (PPC, SMA, M1_in, M1_out, ISM, TARGET, STR, STN, GPE, GPI, THL)  #
 
 
 # Add noise to weights
@@ -67,14 +71,32 @@ connections = {
 
     "SMA -> SMA": AllToAll(SMA.str.V, SMA.str.Isyn, Wlateral(n_sma)),
 
+    "M1_in -> M1_in": AllToAll(M1_in.str.V, M1_in.str.Isyn, Wlateral(n_m1_in)),
+
+    "M1_out -> M1_out": AllToAll(M1_out.str.V, M1_out.str.Isyn, Wlateral(n_m1_out)),
+
+    "ISM -> ISM": AllToAll(ISM.str.V, ISM.str.Isyn, Wlateral(n_ism)),
+
     # "STR -> STR": AllToAll(STR.str.V, STR.str.Isyn, Wlateral(n_sma * n_ppc)),
 
+
+    # Input to PPC
+    "TARGET -> PPC": OneToColumn(TARGET.str.V, PPC.str.Isyn, np.ones(n_targets*n_arm), np.array([n_arm, n_targets])),
+
+    "TARGET -> ISM": OneToOne(TARGET.str.V, ISM.str.Isyn, 0.5*np.ones(n_targets)),
 
     # Input To SMA
     "PPC -> SMA": AllToAll(PPC.str.V, SMA.str.Isyn, Wppc2sma(), np.array([n_sma, n_arm, n_targets])),#weights(n_sma*n_ppc)
 
-    # Input to PPC
-    "TARGET -> PPC": OneToColumn(TARGET.str.V, PPC.str.Isyn, np.ones(n_targets*n_arm), np.array([n_arm, n_targets])),
+    # Input To M1in
+    "SMA -> M1_in": OneToColumn(SMA.str.V, M1_in.str.Isyn, np.ones(n_m1_in), np.array([n_arm, n_sma])),#weights(n_sma*n_ppc)
+
+
+    # "ISM -> M1_out": OneToOne(ISM.str.V, M1_out.str.Isyn, np.ones(n_arm)),
+
+    "M1_in -> M1_out": AllToAll(M1_in.str.V, M1_out.str.Isyn, WM1in2M1out()),
+
+    "ISM -> M1_out": OneToOne(ISM.str.V, M1_out.str.Isyn, 0.5*np.ones(n_arm)),
 
     # SMA <-> BG
     # "SMA.str -> Str.str": OneToOne(SMA.str.V, Str.str.Isyn, np.ones(n_sma)),
@@ -183,9 +205,9 @@ def history():
 
     histor["PPC"]["str"] = PPC.str.history[:duration]
     histor["SMA"]["str"] = SMA.str.history[:duration]
-    # histor["M1_in"]["str"] = M1_in.str.history[:duration]
-    # histor["M1_out"]["str"] = M1_out.str.history[:duration]
-    # histor["ISM"]["str"] = ISM.str.history[:duration]
+    histor["M1_in"]["str"] = M1_in.str.history[:duration]
+    histor["M1_out"]["str"] = M1_out.str.history[:duration]
+    histor["ISM"]["str"] = ISM.str.history[:duration]
     histor["TARGET"]["str"] = TARGET.str.history[:duration]
     histor["STR"]["str"] = STR.str.history[:duration]
     histor["STN"]["str"] = STN.str.history[:duration]
@@ -198,9 +220,9 @@ def reset_history():
 
     PPC.str.history[:duration] = 0
     SMA.str.history[:duration] = 0
-    # M1_in.str.history[:duration] = 0
-    # M1_out.str.history[:duration] = 0
-    # ISM.str.history[:duration] = 0
+    M1_in.str.history[:duration] = 0
+    M1_out.str.history[:duration] = 0
+    ISM.str.history[:duration] = 0
     TARGET.str.history[:duration] = 0
     STR.str.history[:duration] = 0
     THL.str.history[:duration] = 0

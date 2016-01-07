@@ -29,14 +29,13 @@ def single_trial():
     ppc = histor["PPC"]["str"][:time]
     sma = histor["SMA"]["str"][:time]
     trg = histor["TARGET"]["str"][:time]
-    # ism = histRor["ISM"]["str"][:time]
-    # m1in = histor["M1_in"]["str"][:time]
-    # m1out = histor["M1_out"]["str"][:time]
+    ism = histor["ISM"]["str"][:time]
+    m1in = histor["M1_in"]["str"][:time]
+    m1out = histor["M1_out"]["str"][:time]
     str = histor["STR"]["str"][:time]
-    stn = histor["STN"]["str"][:time]
+    # stn = histor["STN"]["str"][:time]
     thl = histor["THL"]["str"][:time]
-    gpi = histor["GPI"]["str"][:time]
-
+    # gpi = histor["GPI"]["str"][:time]
 
 
     plt.figure(figsize=(18, 9))
@@ -71,48 +70,48 @@ def single_trial():
     plt.title('Target')
     #
     #
-    # plt.subplot(332)
-    # plt.plot(m1in)
-    # plt.title('M1in')
-    #
-    # plt.subplot(335)
-    # plt.plot(m1out[:,0], c='b', label=0)
-    # plt.plot(m1out[:,1], c='r', label=1)
-    # plt.plot(m1out[:,2], c='g', label=2)
-    # plt.plot(m1out[:,3], c='m', label=3)
-    # plt.plot(m1out[:,4], c='c', label=4)
-    # plt.plot(m1out[:,5], c='y', label=5)
-    # plt.plot(m1out[:,6], c='k', label=6)
-    # plt.plot(m1out[:,7], 'bo', label=7)
-    # plt.plot(m1out[:,8], 'r*', label=8)
-    # plt.title('M1out')
-    #
-    #
-    #
-    # plt.subplot(333)
-    # plt.plot(ism[:,0], c='b', label=1)
-    # plt.plot(ism[:,1], c='r', label=2)
-    # plt.plot(ism[:,2], c='g', label=3)
-    # plt.plot(ism[:,3], c='m', label=4)
-    # plt.plot(ism[:,4], c='c', label=5)
-    # plt.plot(ism[:,5], c='y', label=6)
-    # plt.plot(ism[:,6], c='k', label=7)
-    # plt.plot(ism[:,7], 'bo', label=8)
-    # plt.plot(ism[:,8], 'r*', label=9)
-    # plt.title('ISM')
+    plt.subplot(332)
+    plt.plot(m1in)
+    plt.title('M1in')
 
+    plt.subplot(335)
+    plt.plot(m1out[:,0], c='b', label=0)
+    plt.plot(m1out[:,1], c='r', label=1)
+    plt.plot(m1out[:,2], c='g', label=2)
+    plt.plot(m1out[:,3], c='m', label=3)
+    plt.plot(m1out[:,4], c='c', label=4)
+    plt.plot(m1out[:,5], c='y', label=5)
+    plt.plot(m1out[:,6], c='k', label=6)
+    plt.plot(m1out[:,7], 'bo', label=7)
+    plt.plot(m1out[:,8], 'r*', label=8)
+    plt.title('M1out')
+    #
+    #
+    #
+    plt.subplot(333)
+    plt.plot(ism[:,0], c='b', label=1)
+    plt.plot(ism[:,1], c='r', label=2)
+    plt.plot(ism[:,2], c='g', label=3)
+    plt.plot(ism[:,3], c='m', label=4)
+    plt.plot(ism[:,4], c='c', label=5)
+    plt.plot(ism[:,5], c='y', label=6)
+    plt.plot(ism[:,6], c='k', label=7)
+    plt.plot(ism[:,7], 'bo', label=8)
+    plt.plot(ism[:,8], 'r*', label=9)
+    plt.title('ISM')
 
-    # plt.subplot(337)
-    # init_pos = task.trials[0]["initial_pos_arm"]
-    # prop = np.ones(trg.shape[0])*init_pos
-    # plt.plot(prop)
-    # plt.title('Propioceptors')
 
     plt.subplot(337)
-    plt.plot(stn)
-    plt.title('stn')
-    plt.ylim(stn.min()-10, stn.max()+10)
-    plt.xlim(-100, +5100)
+    init_pos = task.trials[0]["initial_pos_arm"]
+    prop = np.ones(trg.shape[0])*init_pos
+    plt.plot(prop)
+    plt.title('Propioceptors')
+
+    # plt.subplot(337)
+    # plt.plot(stn)
+    # plt.title('stn')
+    # plt.ylim(stn.min()-10, stn.max()+10)
+    # plt.xlim(-100, +5100)
 
     plt.subplot(338)
     plt.plot(str)
@@ -126,11 +125,11 @@ def single_trial():
     plt.ylim(thl.min()-10, thl.max()+10)
     plt.xlim(-100, +5100)
 
-    plt.subplot(335)
-    plt.plot(gpi)
-    plt.title('GPi')
-    plt.ylim(gpi.min()-100, gpi.max()+100)
-    plt.xlim(-100, +5100)
+    # plt.subplot(335)
+    # plt.plot(gpi)
+    # plt.title('GPi')
+    # plt.ylim(gpi.min()-100, gpi.max()+100)
+    # plt.xlim(-100, +5100)
     plt.show()
 
 if __name__ == "__main__":

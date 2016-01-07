@@ -57,6 +57,8 @@ PPC_rest = 3.0
 TARGET_rest = -3.0
 a = 1./1.
 SMA_rest = -3.0*a
+M1_in_rest = -20.0
+M1_out_rest = -10.0
 # ARM_rest = -30.0
 STR_rest = 0.0
 STN_rest = -10.0
@@ -92,13 +94,25 @@ gains = {
 
     "SMA -> SMA": +0.5,
 
-    # "STR -> STR": +0.5,
+    "M1_in -> M1_in": +0.5,
 
+    "M1_out -> M1_out": +0.5,
+
+    "ISM -> ISM": +0.5,
+
+
+    # Input
+    "TARGET -> PPC": +1.0,#+0.5,#
+
+    "TARGET -> ISM": +1.0,#+0.5,#
     # Input To SMA
     "PPC -> SMA": +0.5,#+1.0,#
 
-    # Input to PPC
-    "TARGET -> PPC": +1.0,#+0.5,#
+    # Input To M1in
+    "SMA -> M1_in": +0.1,#+1.0,#
+
+    "M1_in -> M1_out": +0.1,
+    "ISM -> M1_out": +0.75,
 
 
     # SMA <-> BG
@@ -114,7 +128,7 @@ gains = {
 
     "GPE.str -> STN.str": -1.,
 
-    "STN.str -> GPI.str": +0.2,
+    "STN.str -> GPI.str": +0.1,
 
 
     "GPI.str -> THL.str": -0.2,
