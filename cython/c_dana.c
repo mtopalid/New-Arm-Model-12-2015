@@ -5285,18 +5285,9 @@ static PyObject *__pyx_pf_6c_dana_5Group_4reset(struct __pyx_obj_6c_dana_Group *
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("reset", 0);
 
-  /* "c_dana.pyx":196
- * 
- *         cdef int i
- *         self._history_index = 0             # <<<<<<<<<<<<<<
- *         for i in range(len(self._units)):
- *             self._units[i].V = 0
- */
-  __pyx_v_self->_history_index = 0;
-
   /* "c_dana.pyx":197
  *         cdef int i
- *         self._history_index = 0
+ *         #self._history_index = 0
  *         for i in range(len(self._units)):             # <<<<<<<<<<<<<<
  *             self._units[i].V = 0
  *             self._units[i].U = 0
@@ -5310,7 +5301,7 @@ static PyObject *__pyx_pf_6c_dana_5Group_4reset(struct __pyx_obj_6c_dana_Group *
     __pyx_v_i = __pyx_t_3;
 
     /* "c_dana.pyx":198
- *         self._history_index = 0
+ *         #self._history_index = 0
  *         for i in range(len(self._units)):
  *             self._units[i].V = 0             # <<<<<<<<<<<<<<
  *             self._units[i].U = 0

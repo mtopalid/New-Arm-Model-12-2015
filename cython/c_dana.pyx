@@ -193,7 +193,7 @@ cdef class Group:
         """ Reset all activities and history index """
 
         cdef int i
-        self._history_index = 0
+        #self._history_index = 0
         for i in range(len(self._units)):
             self._units[i].V = 0
             self._units[i].U = 0

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
 # Copyright (c) 2015, Meropi Topalidou
 # Distributed under the (new) BSD License.
@@ -6,55 +7,46 @@
 #               Nicolas Rougier (Nicolas.Rougier@inria.fr)
 # -----------------------------------------------------------------------------
 
-# Simulate number of experiments that is given in parameters.py of the different
-# models. Each simulation is a number of trials under Guthrie protocol.
+# Evolution of single trial with Guthrie protocol
 # -----------------------------------------------------------------------------
 
 if __name__ == "__main__":
 
     # Include to the path files from cython folder
-    temp = '../cython/'
+    t = '../cython/'
     import sys
-    sys.path.append(temp)
 
-    import numpy as np
-    import os
-
+    sys.path.append(t)
     # model file build the structures and initialize the model
     from model import *
+    from trial import *
+    from task_position import Task
+    import os
     from learning import *
-    from parameters import *
-    from task_1ch import Task_1ch
 
-    # Creation of folder to save the results
-    folder = '../Results/Learn_Positions'
+    folder = '../Results/Learn_Positions'  # '#+M1_learning
     if not os.path.exists(folder):
         os.makedirs(folder)
+    for i in range(100):
+        print("\nSimulation: %d\n" % (i + 1))
 
-    for i in range(79,100):#simulations):
-
-        print(('Simulation: ', i + 1))
         # Initialize the system
-        reset()
-
-        # Define the shapes and the positions that we'll be used to each trial
-        # n should be multiple of 6 because there are 6 valuable combinations of shapes and positions
-        task = Task_1ch(n=n_learning_positions_trials)
+        task = Task(n=n_learning_positions_trials)
+        #
+        # Save the trials
+        f = folder + '/Task%03d.npy' % (i + 1)
+        np.save(f, task.trials)
 
         # Repeated trials with learning after each trial
-        learning_trials(task, trials=n_learning_positions_trials, ncues=1, debug_simulation = True, debugging=False,
-                        duration=duration_learning_positions, debugging_arm_learning=False)
+        learning_trials(task, trials=n_learning_positions_trials, duration=duration, debug_simulation=True,
+                        debugging=False)  # , tr=tr-1)
 
-        # Debugging information
-        print(("Moves needed to reach the positions:\n", task.records["moves"]))
+        np.set_printoptions(threshold=3)
+        P = task.records["best"]
+        print("  Mean performance		: %.1f %%" % np.array(P * 100).mean())
+        R = task.records["reward"]
+        print("  Mean reward			: %.3f" % np.array(R).mean())
+        # print "Moves:\n", task.records["moves"][:n_learning_positions_trials]
 
-        # Save the results in files
-        file = folder + '/Cues'  + "%03d" % (i+1) + '.npy'
-        np.save(file,task.trials)
-        file = folder + '/Records'  + "%03d" % (i+1) + '.npy'
-        np.save(file,task.records)
-        print()
-
-
-
-
+        f = folder + '/Records%03d.npy' % (i + 1) + ''
+        np.save(f, task.records)

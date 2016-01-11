@@ -44,23 +44,6 @@ def inverse(pos, l1=1., l2=1., pos0=np.array([0.0, 0.0]).reshape(1, 2)):
     return theta1, theta2
 
 
-def tar_pos(whichTar):  # Target):
-    # whichTar = np.where(Target != 0)[0][0]
-
-    if whichTar == 0:
-        pos = np.array([-1., 1.25]).reshape(1, 2)
-    elif whichTar == 1:
-        pos = np.array([-0.75, 1.]).reshape(1, 2)
-    elif whichTar == 2:
-        pos = np.array([-1., 0.75]).reshape(1, 2)
-    else:
-        pos = np.array([-1.25, 1.]).reshape(1, 2)
-
-    # theta1, theta2 = inverse(pos)
-    # musc = muscles(theta1, theta2)
-    return pos  # , musc
-
-
 def convert_rad2degr(radians):
     degrees = radians * 180 / np.pi
     return degrees
@@ -79,47 +62,39 @@ def distance(pos1, pos2):
 def task_coordinations():
     crd = np.linspace(-1, 1, 2 / 1. + 1)
     coord = np.zeros([crd.size, crd.size, 2])
-    # angles = np.zeros([crd.size, crd.size, 2])
-    # musc = np.zeros([crd.size, crd.size, 4])
     k, l = -1, 0
     for i in crd:
         k += 1
         l = 0
         for j in crd:
             coord[k, l, :] = i, j
-            # angles[k, l, :] = inverse(coord[k, l, :].reshape(1, 2))
-            # musc[k, l, :] = muscles(angles[k, l, 0], angles[k, l, 1]).reshape((4,))
             l += 1
     return coord.reshape((9,2))
+def closer(init_pos, pos, target):
+    d1 = distance(init_pos,target)
+    d2 = distance(pos, target)
+    return d1>d2
+
+
 
 if __name__ == "__main__":
-    # initial position of the arm
-    # pos_f = np.array([-1., 1.]).reshape(1, 2)
-    # th1_f, th2_f = inverse(pos_f)
-    # Arm_f = muscles(th1_f, th2_f)
-    # print convert_rad2degr(th1_f)
-    # print distance([0, 0], [0, 1])
 
     coord = task_coordinations()
     print(coord.shape)
-    for i in range(9):
-        print(coord[i])
-
-    # plt.plot(musc[:,:,0],musc[:,:,1], '*')
-    # plt.plot(musc[:,:,0], 'bo')
-    # plt.plot(musc[:,:,1], 'go')
-    # plt.plot(musc[:,:,2], 'ro')
-    # plt.plot(musc[:,:,3], 'mo')
-    plt.plot(coord[:, 0], coord[:, 1], '*')
-    # plt.plot(coord[4,1,0],coord[4,1,1], 'bo')
-    # plt.plot(coord[1,6,0],coord[1,6,1], 'bo')
-    # plt.plot(coord[4,6,0],coord[4,6,1], 'bo')
-    # plt.plot(coord[6,1,0],coord[6,1,1], 'bo')
-    plt.xlim([-1.5, 1.5])
-    plt.ylim([-1.5, 1.5])
-    plt.show()
-    # for i in range(crd.size):
-    #     print((coord[i]))
-    #     print((musc[i]))
-    #     print((convert_rad2degr(angles[i])))
-    #     print('')
+    print(closer(coord[0],coord[1],coord[6]))
+    print(closer(coord[0],coord[3],coord[5]))
+    print(closer(coord[2],coord[1],coord[5]))
+    # for i in range(9):
+    #     print(coord[i])
+    # for goal in range(5):
+    #     d = distance(coord[0],coord[i])
+    #     for j in range(9):
+    #         d2 = distance(coord[j], coord[i])
+    #         print("Distance 0 --> %d: %f" % (i, d))
+    #         print("Distance %d --> %d: %f" % (j, i, d2))
+    #         print("Closer or Further: %f" % (d>d2))
+    #         print("\n\n")
+    # plt.plot(coord[:, 0], coord[:, 1], '*')
+    # plt.xlim([-1.5, 1.5])
+    # plt.ylim([-1.5, 1.5])
+    # plt.show()
